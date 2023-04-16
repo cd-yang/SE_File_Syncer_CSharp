@@ -1,3 +1,5 @@
+using System.Management;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +18,27 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+
+//Create a WMI query to monitor USB drive changes
+string query = "SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2";
+
+//Create a ManagementEventWatcher object and subscribe to the EventArrived event
+var watcher = new ManagementEventWatcher(query);
+if (watcher != null)
+{
+    watcher.EventArrived += new EventArrivedEventHandler((object sender, EventArrivedEventArgs e) =>
+    {
+        //Perform the desired action
+        Console.WriteLine("USB drive change detected.");
+    });
+
+    //Start the watcher
+    watcher.Start();
+}
+
+//Stop the watcher when no longer needed
+//watcher.Stop();
 
 
 app.MapControllerRoute(
