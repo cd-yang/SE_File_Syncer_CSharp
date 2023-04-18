@@ -1,3 +1,4 @@
+using SE_File_Syncer;
 using System.Management;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +30,8 @@ if (watcher != null)
 {
     watcher.EventArrived += new EventArrivedEventHandler((object sender, EventArrivedEventArgs e) =>
     {
-        //Perform the desired action
         Console.WriteLine("USB drive change detected.");
+        FileSyncer.AutoCopyFiles(e);
     });
 
     //Start the watcher
