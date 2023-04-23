@@ -1,11 +1,16 @@
 using SE_File_Syncer;
 using System.Management;
 
+IConfiguration configuration = new ConfigurationBuilder()
+                            .AddJsonFile("appsettings.json")
+                            .Build();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton(new AppHelper(configuration));
 
 var app = builder.Build();
 
